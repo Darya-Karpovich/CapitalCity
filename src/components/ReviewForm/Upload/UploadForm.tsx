@@ -2,7 +2,7 @@ import { InboxOutlined } from '@ant-design/icons';
 import { Button, UploadFile, UploadProps } from 'antd';
 // eslint-disable-next-line no-duplicate-imports
 import { message, Upload } from 'antd';
-import Compressor from 'compressorjs';
+// import Compressor from 'compressorjs';
 import React, { useState } from 'react';
 
 import { useReviewStore } from '../../../store/reviewStore';
@@ -12,7 +12,7 @@ const { Dragger } = Upload;
 
 const UploadForm = () => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const [compressedFile, setCompressedFile] = useState<Blob | null>(null);
+  // const [compressedFile, setCompressedFile] = useState<Blob | null>(null);
   const { setImage } = useReviewStore();
   const props: UploadProps = {
     name: 'file',
@@ -43,14 +43,14 @@ const UploadForm = () => {
       console.log('Dropped files', e.dataTransfer.files);
     },
   };
-  const handleCompressedUpload = (file: File) => {
-    new Compressor(file, {
-      quality: 0.6,
-      success: result => {
-        setCompressedFile(result);
-      },
-    });
-  };
+  // const handleCompressedUpload = (file: File) => {
+  //   new Compressor(file, {
+  //     quality: 0.6,
+  //     success: result => {
+  //       setCompressedFile(result);
+  //     },
+  //   });
+  // };
 
   const onLoad = (fileString: string) => {
     setImage(fileString);
@@ -64,13 +64,13 @@ const UploadForm = () => {
   };
   const handleSubmit = () => {
     const file = fileList[0];
-    if (file.size && file.size > 500000) {
-      handleCompressedUpload(file as unknown as File);
-      getBase64(compressedFile as Blob);
-    } else {
-      getBase64(file as unknown as Blob);
-    }
+    // if (file.size && file.size > 500000) {
+    //   handleCompressedUpload(file as unknown as File);
+    //   getBase64(compressedFile as Blob);
+    // } else {
+    getBase64(file as unknown as Blob);
   };
+
   return (
     <>
       <Dragger {...props}>

@@ -5,6 +5,7 @@ import { useQuery } from 'react-query';
 import { getCapitalsInBounds } from '../../api/capital';
 import { CardCarousel } from '../../components/CardCarousel/CardCarousel';
 import { SearchInput } from '../../components/SearchInput/SearchInput';
+import { HomePageTestIds } from '../../lib/TestIds/ComponentTestId';
 import { useThemeStore } from '../../store/themeStore';
 import DayWawa from './../../assets/images/wawad2.jpg';
 import NightWawa from './../../assets/images/wawan.jpg';
@@ -26,6 +27,7 @@ const HomePage = () => {
       style={{
         minHeight: '200vh',
       }}
+      data-testid={HomePageTestIds.Container}
     >
       <div
         className="first-screen"
@@ -34,8 +36,11 @@ const HomePage = () => {
         }}
       >
         <Space className="main-text-container">
-          <Typography.Paragraph className="main-text">
-            All word in one place
+          <Typography.Paragraph
+            className="main-text"
+            data-testid={HomePageTestIds.Title}
+          >
+            The whole world in one place
           </Typography.Paragraph>
           <Typography.Paragraph className="subtitle">
             Check out reviews, weather and all basic usefull information about

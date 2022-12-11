@@ -18,7 +18,7 @@ const SignInForm = () => {
 
   const onFinish = (values: Pick<User, 'email' | 'password'>) => {
     axios
-      .post(
+      .put(
         `http://localhost:8080/user/login?email=${values.email}&password=${values.password}`,
       )
       .then(user => {

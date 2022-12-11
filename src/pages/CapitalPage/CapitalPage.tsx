@@ -1,4 +1,12 @@
-import { Button, Layout, Row, Space, Typography } from 'antd';
+import {
+  Button,
+  Layout,
+  Radio,
+  RadioChangeEvent,
+  Row,
+  Space,
+  Typography,
+} from 'antd';
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
@@ -12,12 +20,13 @@ import { CommentCard } from '../../components/Comment/CommentCard';
 import { Converter } from '../../components/Converter/Converter';
 import { ReviewForm } from '../../components/ReviewForm/ReviewForm';
 import { StatusModal } from '../../components/StatusModal/StatusModal';
-import { WeatherCard } from '../../components/WeatherCard';
+import { WeatherCard } from '../../components/WeatherCard/WeatherCard';
 import { ReviewDB } from '../../lib/types';
 import { useAuthStore } from '../../store/authStore';
 import { useThemeStore } from '../../store/themeStore';
 import './CapitalPage.less';
 import { Description } from './components/Description';
+import { Gallery } from './components/Gallery';
 import { RatingCard } from './components/RatingCard';
 
 type Ratings = {
@@ -42,6 +51,7 @@ const CapitalPage = () => {
   const { token } = useAuthStore();
   const [modal, setModal] = useState(false);
   const [converter, setConverter] = useState(false);
+  const [sorting, setSorting] = useState('');
 
   const query = useQuery({
     queryKey: ['capital', capital],
@@ -58,11 +68,12 @@ const CapitalPage = () => {
   });
 
   const reviews = useQuery({
-    queryKey: ['rewiews', capital],
+    queryKey: ['rewiews', [capital, sorting]],
     queryFn: () =>
       getReviewsForCapital({
         capitalName: capital || '',
         token: token || '',
+        optionalSort: sorting,
       }),
     enabled: !!capital,
   });
@@ -81,36 +92,51 @@ const CapitalPage = () => {
   const { data } = useLocation(
     coordinates?.substring(1, coordinates.length - 1).replace(/\s/g, '') || '',
   );
+
   const average = (reviews: ReviewDB[]): Ratings => {
     const general =
       Math.round(
-        (reviews.reduce((total, next) => total + next.rating_general, 0) /
+        (reviews.reduce((total, next) => total + next.ratingGeneral, 0) /
           reviews.length) *
           10,
       ) / 10;
     const food =
       Math.round(
-        (reviews.reduce((total, next) => total + next.rating_food, 0) /
+        (reviews.reduce((total, next) => total + next.ratingFood, 0) /
           reviews.length) *
           10,
       ) / 10;
     const attractions =
       Math.round(
-        (reviews.reduce((total, next) => total + next.rating_attraction, 0) /
+        (reviews.reduce((total, next) => total + next.ratingAttraction, 0) /
           reviews.length) *
           10,
       ) / 10;
     const transport =
       Math.round(
-        (reviews.reduce((total, next) => total + next.rating_transport, 0) /
+        (reviews.reduce((total, next) => total + next.ratingTransport, 0) /
           reviews.length) *
           10,
       ) / 10;
     return { general, food, attractions, transport };
   };
+
   const onHandleClick = () => {
     setConverter(!converter);
   };
+
+  const handleSort = ({ target: { value } }: RadioChangeEvent) => {
+    setSorting(value as string);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    reviews.refetch();
+  };
+
+  const options = [
+    { label: 'Date', value: 'creationTime' },
+    { label: 'Likes', value: 'likeRatio' },
+    { label: 'Rating', value: 'ratingGeneral' },
+  ];
+
   const renderContent = () => {
     if (token && reviews.data) {
       if (reviews.data.length === 0) {
@@ -132,14 +158,34 @@ const CapitalPage = () => {
       }
       return (
         <>
-          {reviews.data.map((r, idx) => (
-            <CommentCard
-              key={idx}
-              review={r}
-              onRefetch={reviews.refetch}
-              token={token || ''}
+          <Space
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              width: '100%',
+              marginTop: '20px',
+            }}
+          >
+            <Radio.Group
+              options={options}
+              onChange={handleSort}
+              optionType="button"
+              buttonStyle="solid"
+              style={{ border: '3px solid #fff' }}
             />
-          ))}
+          </Space>
+          {reviews.data.map(
+            (r, idx) =>
+              r.commentStatus === 'ACTIVE' && (
+                <CommentCard
+                  key={idx}
+                  review={r}
+                  onRefetch={reviews.refetch}
+                  token={token || ''}
+                />
+              ),
+          )}
         </>
       );
     }
@@ -206,6 +252,17 @@ const CapitalPage = () => {
                   <StatusModal capital={query.data?.name} />
                 </Space>
               )}
+              <Space.Compact direction="vertical">
+                <Button onClick={onHandleClick} style={{ width: '210px' }}>
+                  Conver
+                </Button>
+                {converter && myCountry.data?.currency && (
+                  <Converter
+                    toCurr={myCountry.data?.currency}
+                    fromCurr={query.data.currency}
+                  />
+                )}
+              </Space.Compact>
               {data && (
                 <WeatherCard
                   icon={data.current.condition.icon}
@@ -253,14 +310,7 @@ const CapitalPage = () => {
               </Button>
             )}
             <Description text={query.data?.description} />
-
-            <Button onClick={onHandleClick}>Conver</Button>
-            {converter && myCountry.data?.currency && (
-              <Converter
-                toCurr={myCountry.data?.currency}
-                fromCurr={query.data.currency}
-              />
-            )}
+            <Gallery capitalName={capital || ''} />
           </>
         )}
         {modal && (

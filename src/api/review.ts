@@ -21,23 +21,34 @@ export const postReview = ({ token, capital, review }: Props) => {
       filename: '',
       value: review.image.value,
     },
-    rating_attraction: review.ratings.attractions,
-    rating_food: review.ratings.food,
-    rating_general: review.ratings.general,
-    rating_transport: review.ratings.transport,
+    ratingAttraction: review.ratings.attractions,
+    ratingFood: review.ratings.food,
+    ratingGeneral: review.ratings.general,
+    ratingTransport: review.ratings.transport,
     sessionId: token,
   });
 };
 export const getReviewsForCapital = ({
   capitalName,
   token,
+  optionalSort,
 }: {
   capitalName: string;
   token: string;
+  optionalSort?: string;
 }) => {
   return axios
     .get<ReviewDB[]>(
-      `http://localhost:8080/comment/allforcapital/?capitalName=${capitalName}&optionalSessionToken=${token}`,
+      `http://localhost:8080/comment/allforcapital/?capitalName=${capitalName}&optionalSessionToken=${token}${
+        optionalSort ? '&optionalSort=' + optionalSort : ''
+      }`,
+    )
+    .then(res => res.data);
+};
+export const getReviewsForUser = ({ token }: { token: string }) => {
+  return axios
+    .get<ReviewDB[]>(
+      `http://localhost:8080/comment/allforuser/?sessionToken=${token}`,
     )
     .then(res => res.data);
 };

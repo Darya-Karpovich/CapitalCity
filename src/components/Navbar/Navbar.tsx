@@ -27,7 +27,7 @@ import { ModalCard } from '../AuthModal/AuthModal';
 
 const Navbar = () => {
   const { pathname } = useLocation();
-  const { token, setToken } = useAuthStore();
+  const { token, user, setToken } = useAuthStore();
   const { theme, toggleTheme } = useThemeStore();
   const { isModalOpen, setModal } = useModalStore();
   const navigate = useNavigate();
@@ -36,6 +36,7 @@ const Navbar = () => {
     (pathname: string) => {
       const navbarColors = {
         [Paths.Map]: 'rgba(138, 138, 138, 0.5)',
+        [Paths.Admin]: '#b2d9a7',
         [Paths.Profile]: theme === 'light' ? '#1DA57A' : '#2e1b40',
         '/capital': theme === 'light' ? '#1DA57A' : '#2e1b40',
       } as { [k: string]: string };
@@ -51,28 +52,55 @@ const Navbar = () => {
     [theme],
   );
 
-  const items: MenuProps['items'] = [
-    {
-      label: <NavLink to={Paths.Profile}>My profile</NavLink>,
-      key: '0',
-    },
-    {
-      label: (
-        <Button
-          onClick={() => {
-            setToken('');
-            // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            logout(token as string);
-            openNotification('You were succesfully loged out!');
-            navigate('/');
-          }}
-        >
-          Log out
-        </Button>
-      ),
-      key: '1',
-    },
-  ];
+  const items: MenuProps['items'] =
+    user?.role === 'ADMIN'
+      ? [
+          {
+            label: <NavLink to={Paths.Profile}>My profile</NavLink>,
+            key: '0',
+          },
+          {
+            label: <NavLink to={Paths.Admin}>Users menagment</NavLink>,
+            key: '1',
+          },
+          {
+            label: (
+              <Button
+                onClick={() => {
+                  setToken('');
+                  token && logout(token);
+                  openNotification('You were succesfully loged out!');
+                  navigate('/');
+                }}
+              >
+                Log out
+              </Button>
+            ),
+            key: '2',
+          },
+        ]
+      : [
+          {
+            label: <NavLink to={Paths.Profile}>My profile</NavLink>,
+            key: '0',
+          },
+          {
+            label: (
+              <Button
+                onClick={() => {
+                  setToken('');
+                  // eslint-disable-next-line @typescript-eslint/no-floating-promises
+                  logout(token as string);
+                  openNotification('You were succesfully loged out!');
+                  navigate('/');
+                }}
+              >
+                Log out
+              </Button>
+            ),
+            key: '1',
+          },
+        ];
 
   return (
     <Layout.Header
@@ -138,7 +166,11 @@ const Navbar = () => {
           </NavLink>
           {token ? (
             <Dropdown menu={{ items }} trigger={['click']}>
-              <Avatar size={40} icon={<UserOutlined />} />
+              {user?.avatar ? (
+                <Avatar size={40} src={user?.avatar.value} />
+              ) : (
+                <Avatar size={40} icon={<UserOutlined />} />
+              )}
             </Dropdown>
           ) : (
             <Typography.Text

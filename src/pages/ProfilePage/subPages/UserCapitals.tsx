@@ -11,7 +11,7 @@ const PAGE_SIZE = 3;
 
 const UserCapitals = ({ color }: { color: string }) => {
   const { token } = useAuthStore();
-  const [status, setStatus] = useState<string>('VISITED');
+  const [status, setStatus] = useState('VISITED');
   const capitals = useQuery({
     queryKey: ['capitalsStatus', [status, token]],
     queryFn: () =>
@@ -30,7 +30,7 @@ const UserCapitals = ({ color }: { color: string }) => {
     setState({
       current: page,
       minIndex: (page - 1) * PAGE_SIZE,
-      maxIndex: page * PAGE_SIZE,
+      maxIndex: page * PAGE_SIZE - 1,
     });
   };
   const handleSetStatus = (event: {
@@ -79,7 +79,7 @@ const UserCapitals = ({ color }: { color: string }) => {
             {capitals.data.map(
               (capital, idx) =>
                 idx >= state.minIndex &&
-                idx < state.maxIndex && (
+                idx <= state.maxIndex && (
                   <UserCapitalCard
                     key={idx}
                     capitalName={capital.capitalName}

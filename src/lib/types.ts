@@ -1,13 +1,14 @@
+type Image = {
+  filename: string;
+  value: string;
+};
 type Capital = {
   id: number;
   name: string;
   country: 'string';
   description: string;
   commentList: ReviewDB[];
-  flaglocation: {
-    filename: string;
-    value: string;
-  };
+  flaglocation: Image;
   coordenates: string;
   currency: string;
 };
@@ -26,6 +27,10 @@ type OverpassCapital = {
     'name:en': string;
   };
 };
+type Avatar = {
+  id: number;
+  value: string;
+};
 
 type User = {
   email: string;
@@ -33,11 +38,14 @@ type User = {
   password: string;
   sessiontoken: string;
   username: string;
+  avatar: Avatar;
+  role: string;
 };
 
 type ReviewDB = {
   cText: string;
   capital: string;
+  userAvatar: Avatar;
   creationTime: string;
   id: number;
   imageLocation: {
@@ -46,10 +54,11 @@ type ReviewDB = {
   };
   likeRatio: number;
   likedByCurrentUser: number;
-  rating_attraction: number;
-  rating_food: number;
-  rating_general: number;
-  rating_transport: number;
+  ratingAttraction: number;
+  ratingFood: number;
+  ratingGeneral: number;
+  ratingTransport: number;
+  commentStatus: 'HIDDEN' | 'ACTIVE';
   user: string;
 };
 
@@ -74,6 +83,16 @@ type Condition = {
   text: string;
   icon: string;
   code: number;
+};
+type Location = {
+  country: string;
+  lat: number;
+  localtime: '2022-07-01 9:13';
+  localtime_epoch: number;
+  lon: number;
+  name: string;
+  region: string;
+  tz_id: string;
 };
 type Weather = {
   current: {
@@ -131,4 +150,6 @@ export type {
   Weather,
   IpLookup,
   CapitalStatus,
+  Avatar,
+  Image,
 };

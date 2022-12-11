@@ -7,6 +7,7 @@ import DarkBG from './darkBG.svg';
 import LightBG from './lightBG.svg';
 import { ProfileInfo } from './subPages/ProfileInfo';
 import { UserCapitals } from './subPages/UserCapitals';
+import { UserReviews } from './subPages/UserReviews';
 
 const ProfilePage = () => {
   const { theme } = useThemeStore();
@@ -21,7 +22,7 @@ const ProfilePage = () => {
       case 'item2':
         return <UserCapitals color={color} />;
       case 'item3':
-        return <h3>item3</h3>;
+        return <UserReviews color={color} />;
       default:
         break;
     }

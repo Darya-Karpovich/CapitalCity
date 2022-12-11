@@ -1,11 +1,15 @@
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from 'antd';
 import React, { useState } from 'react';
 
+import { deleteUser } from '../../../api/user';
+
 export type Item = {
   id: string;
   username: string;
   email: string;
+  role: string;
   sessiontoken: string;
+  avatar: string | null;
 };
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
@@ -54,7 +58,11 @@ const EditableCell: React.FC<EditableCellProps> = ({
 };
 
 const UserTable = ({ users }: { users: Item[] }) => {
-  const newUsers = users.map(row => ({ ...row, key: row.id }));
+  const newUsers = users.map(row => ({
+    ...row,
+    key: row.id,
+    role: row.role === 'ADMIN' ? 'Admin' : 'User',
+  }));
   const [form] = Form.useForm();
   const [data, setData] = useState<Item[]>(newUsers);
   const [editingKey, setEditingKey] = useState('');
@@ -95,9 +103,17 @@ const UserTable = ({ users }: { users: Item[] }) => {
       console.log(errInfo);
     }
   };
-  const handleDelete = (key: React.Key) => {
+  const handleDelete = ({
+    sessiontoken,
+    id,
+  }: {
+    sessiontoken: string;
+    id: string;
+  }) => {
     const newData = data.filter(item => item.id !== key);
     setData(newData);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    deleteUser(sessiontoken);
   };
   const columns = [
     {
@@ -106,19 +122,29 @@ const UserTable = ({ users }: { users: Item[] }) => {
       width: '25%',
       editable: true,
       sorter: (a: { username: string }, b: { username: string }) =>
-        a.username.length - b.username.length,
+        a.username.localeCompare(b.username),
     },
     {
       title: 'email',
       dataIndex: 'email',
       width: '15%',
       editable: true,
+      sorter: (a: { email: string }, b: { email: string }) =>
+        a.email.localeCompare(b.email),
     },
     {
       title: 'sessiontoken',
       dataIndex: 'sessiontoken',
       width: '40%',
       editable: false,
+    },
+    {
+      title: 'role',
+      dataIndex: 'role',
+      width: '25%',
+      editable: true,
+      sorter: (a: { role: string }, b: { role: string }) =>
+        a.role.localeCompare(b.role),
     },
     {
       title: 'Edit',
@@ -155,7 +181,7 @@ const UserTable = ({ users }: { users: Item[] }) => {
         data.length >= 1 ? (
           <Popconfirm
             title="Sure to delete?"
-            onConfirm={() => handleDelete(record.id)}
+            onConfirm={({ sessiontoken }) => handleDelete(sessiontoken)}
           >
             <span>Delete</span>
           </Popconfirm>

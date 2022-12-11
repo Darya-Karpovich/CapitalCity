@@ -68,7 +68,6 @@ const Converter = ({ fromCurr, toCurr }: Props) => {
   };
   return (
     <>
-      <h1>Convert</h1>
       <div>
         <InputNumber
           onChange={value => onChangeFrom(value)}

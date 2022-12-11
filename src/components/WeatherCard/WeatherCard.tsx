@@ -1,7 +1,8 @@
 import { Image, Space, Typography } from 'antd';
 import React from 'react';
 
-import { useThemeStore } from '../store/themeStore';
+import { TemperatureWidgetTestIds } from '../../lib/TestIds/ComponentTestId';
+import { useThemeStore } from '../../store/themeStore';
 
 type Props = {
   icon: string;
@@ -15,6 +16,7 @@ const WeatherCard = ({ icon, temperature, feelsLike, text }: Props) => {
   const { theme } = useThemeStore();
   return (
     <Space.Compact
+      data-testid={TemperatureWidgetTestIds.Container}
       direction="vertical"
       style={{
         alignItems: 'center',

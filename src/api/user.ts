@@ -15,8 +15,24 @@ export const getAllUsers = () => {
     .then(res => res.data);
 };
 
+export const changeAvatar = ({
+  token,
+  avatarId,
+}: {
+  token: string;
+  avatarId: number;
+}) => {
+  return axios.put(
+    `http://localhost:8080/user/changeavatar?avatarId=${avatarId}&sessionToken=${token}`,
+  );
+};
+
 export const logout = (token: string) => {
-  return axios.get<User>(
+  return axios.put<User>(
     `http://localhost:8080/user/logout?sessionToken=${token}`,
   );
+};
+
+export const deleteUser = (token: string) => {
+  return axios.delete<User>(`http://localhost:8080/user?sessionToken=${token}`);
 };

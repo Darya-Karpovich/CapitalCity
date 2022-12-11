@@ -16,15 +16,13 @@ const AdminPage = () => {
   return (
     <Layout
       style={{
-        backgroundColor: '#ddd',
+        backgroundColor: '#b2d9a7',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
       }}
     >
-      <Space style={{ width: '80%' }}>
-        {users.data && <UserTable users={users.data} />}
-      </Space>
+      <Space>{users.data && <UserTable users={users.data} />}</Space>
     </Layout>
   );
 };

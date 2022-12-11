@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { Capital } from '../lib/types';
+import { Capital, Image } from '../lib/types';
 
 export const getCapitalInfo = (name: string) => {
   return axios
@@ -17,5 +17,10 @@ export const getCapitalInfoByCountry = (country: string) => {
 export const getCapitalsInBounds = () => {
   return axios
     .get<Capital[]>('http://localhost:8080/capital/all')
+    .then(res => res.data);
+};
+export const getCapitalPhotos = (name: string) => {
+  return axios
+    .get<Image[]>(`http://localhost:8080/capital/photos?capitalName=${name}`)
     .then(res => res.data);
 };

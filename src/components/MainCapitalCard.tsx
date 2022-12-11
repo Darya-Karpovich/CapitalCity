@@ -12,6 +12,7 @@ const MainCapitalCard = ({ capital }: { capital: Capital }) => {
         backgroundColor: '#fff',
         borderRadius: '20px',
         padding: '20px 40px',
+        marginTop: '20px',
       }}
       onClick={() => navigate(`capital/${capital.name}`)}
     >

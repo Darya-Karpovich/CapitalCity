@@ -3,6 +3,7 @@ import {
   DislikeOutlined,
   LikeFilled,
   LikeOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import {
   Button,
@@ -18,6 +19,7 @@ import moment from 'moment';
 import React, { useState } from 'react';
 import { QueryObserverBaseResult } from 'react-query';
 
+import { reportComment } from '../../api/report';
 import { likeReview } from '../../api/review';
 import { ReviewDB } from '../../lib/types';
 import './CommentCard.less';
@@ -50,6 +52,8 @@ const CommentCard = ({
   };
 
   const handleOk = () => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    reportComment({ commentID: review.id, reasonText: '', token });
     setIsModalOpen(false);
   };
 
@@ -89,12 +93,12 @@ const CommentCard = ({
       </Button>,
     ],
     author: 'Han Solo',
-    avatar: 'https://joeschmoe.io/api/v1/random',
+    avatar: review.userAvatar ? review.userAvatar.value : <UserOutlined />,
     content: (
       <Space.Compact direction="vertical">
         <div>
           <span style={{ color: '#c1c1c1' }}> General impression </span>
-          <Rate disabled defaultValue={review.rating_general} />
+          <Rate disabled defaultValue={review.ratingGeneral} />
         </div>
         <Typography.Paragraph>{review.cText}</Typography.Paragraph>
         {review.imageLocation && (

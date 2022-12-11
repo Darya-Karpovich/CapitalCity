@@ -1,13 +1,17 @@
 import { Button, Form, Input, Space, Typography } from 'antd';
 import axios from 'axios';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
+import { deleteUser } from '../../../api/user';
+import { Paths } from '../../../lib/enums';
 import { openNotification } from '../../../lib/notifications';
 import { User } from '../../../lib/types';
 import { useAuthStore } from '../../../store/authStore';
 
 const UpdateProfileCard = ({ color }: { color: string }) => {
-  const { token, user } = useAuthStore();
+  const { token, user, setToken } = useAuthStore();
+  const navigate = useNavigate();
   const onFinish = (values: User) => {
     axios
       .post(
@@ -22,6 +26,11 @@ const UpdateProfileCard = ({ color }: { color: string }) => {
         }
       })
       .catch(() => null);
+  };
+  const handleDelete = () => {
+    token && deleteUser(token);
+    setToken('');
+    navigate(Paths.Home);
   };
   return (
     <Space
@@ -94,9 +103,25 @@ const UpdateProfileCard = ({ color }: { color: string }) => {
           <Input.Password placeholder="Type your password" />
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Update
-          </Button>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              width: '100%',
+            }}
+          >
+            <Button type="primary" htmlType="submit">
+              Update
+            </Button>
+            <Button
+              type="default"
+              danger
+              style={{ marginRight: '0' }}
+              onClick={handleDelete}
+            >
+              Delete
+            </Button>
+          </div>
         </Form.Item>
       </Form>
     </Space>
