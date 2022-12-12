@@ -110,7 +110,7 @@ const UserTable = ({ users }: { users: Item[] }) => {
     sessiontoken: string;
     id: string;
   }) => {
-    const newData = data.filter(item => item.id !== key);
+    const newData = data.filter(item => item.id !== id);
     setData(newData);
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     deleteUser(sessiontoken);
@@ -179,10 +179,7 @@ const UserTable = ({ users }: { users: Item[] }) => {
       dataIndex: 'operationDalete',
       render: (_: any, record: Item) =>
         data.length >= 1 ? (
-          <Popconfirm
-            title="Sure to delete?"
-            onConfirm={({ sessiontoken }) => handleDelete(sessiontoken)}
-          >
+          <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete}>
             <span>Delete</span>
           </Popconfirm>
         ) : null,

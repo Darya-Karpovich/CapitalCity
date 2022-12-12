@@ -36,7 +36,7 @@ const Navbar = () => {
     (pathname: string) => {
       const navbarColors = {
         [Paths.Map]: 'rgba(138, 138, 138, 0.5)',
-        [Paths.Admin]: '#b2d9a7',
+        [Paths.Admin]: '#1DA57A',
         [Paths.Profile]: theme === 'light' ? '#1DA57A' : '#2e1b40',
         '/capital': theme === 'light' ? '#1DA57A' : '#2e1b40',
       } as { [k: string]: string };

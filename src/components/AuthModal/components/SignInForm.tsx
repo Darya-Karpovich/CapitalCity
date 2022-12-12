@@ -1,4 +1,4 @@
-import { Button, Form, Input, Typography } from 'antd';
+import { Button, Form, Input } from 'antd';
 import axios from 'axios';
 import React from 'react';
 
@@ -42,7 +42,7 @@ const SignInForm = () => {
         name="nest-messages"
         onFinish={onFinish}
         autoComplete="off"
-        style={{ width: '250px' }}
+        style={{ width: '250px', paddingBottom: '50px' }}
       >
         <Form.Item
           name="email"
@@ -72,7 +72,6 @@ const SignInForm = () => {
           </Button>
         </Form.Item>
       </Form>
-      <Typography.Text>Forget password?</Typography.Text>
     </>
   );
 };

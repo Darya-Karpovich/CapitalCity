@@ -1,6 +1,12 @@
 import axios from 'axios';
 
 import { Capital, Image } from '../lib/types';
+type Ratings = {
+  rating_attraction_avg: number;
+  rating_food_avg: number;
+  rating_general_avg: number;
+  rating_transport_avg: number;
+};
 
 export const getCapitalInfo = (name: string) => {
   return axios
@@ -22,5 +28,10 @@ export const getCapitalsInBounds = () => {
 export const getCapitalPhotos = (name: string) => {
   return axios
     .get<Image[]>(`http://localhost:8080/capital/photos?capitalName=${name}`)
+    .then(res => res.data);
+};
+export const getCapitalAverage = (name: string) => {
+  return axios
+    .get<Ratings>(`http://localhost:8080/capital/average?name=${name}`)
     .then(res => res.data);
 };

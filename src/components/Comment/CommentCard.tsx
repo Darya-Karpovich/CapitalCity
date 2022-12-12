@@ -85,7 +85,7 @@ const CommentCard = ({
         style={{
           color: 'red',
           fontSize: '12px',
-          marginLeft: '250px',
+          marginLeft: '100px',
         }}
         onClick={showModal}
       >
@@ -102,7 +102,7 @@ const CommentCard = ({
         </div>
         <Typography.Paragraph>{review.cText}</Typography.Paragraph>
         {review.imageLocation && (
-          <Image src={review.imageLocation.value} alt="mem" width={400} />
+          <Image src={review.imageLocation.value} alt="mem" width={250} />
         )}
       </Space.Compact>
     ),
@@ -123,7 +123,7 @@ const CommentCard = ({
         content={data.content}
         datetime={data.datetime}
         style={{
-          width: '500px',
+          width: '350px',
           padding: '0 20px',
           margin: '20px auto',
         }}

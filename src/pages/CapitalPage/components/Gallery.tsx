@@ -1,4 +1,5 @@
-import { Typography } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
+import { Space, Typography } from 'antd';
 import React from 'react';
 import ImageGallery, { ReactImageGalleryItem } from 'react-image-gallery';
 import { useQuery } from 'react-query';
@@ -17,12 +18,17 @@ const Gallery = ({ capitalName }: { capitalName: string }) => {
       thumbnail: image.value,
     }));
   return (
-    <div style={{ width: '500px' }}>
+    <div style={{ width: '80%' }}>
       {images.data?.length !== 0 && (
         <>
           <Typography.Text style={{ fontWeight: '500', fontSize: '54px' }}>
             Gallery
           </Typography.Text>
+          {images.isLoading && (
+            <Space align="center" style={{ height: '100%' }}>
+              <LoadingOutlined style={{ fontSize: '100px' }} />
+            </Space>
+          )}
           {images.data && (
             <ImageGallery
               thumbnailPosition="left"
